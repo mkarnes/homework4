@@ -1,0 +1,35 @@
+#question 9
+
+sans <- c("Santa", "San")
+match <- str_c(sans, collapse = "|")
+
+has_san <- str_subset(loc$'Site Name', match)
+has_san
+
+#question 10
+# Address starts with number
+# Zip Code 5 digits
+
+complete <- length(loc$Address) - sum(str_detect(loc$Address, "^\\d") & str_detect(loc$`Zip Code`, "\\d{5}"), na.rm = T)
+complete
+
+#question 14
+stats <- function(x) {
+  annual <- filter(x, str_detect('Site Name', "San|Santa")) 
+  annual %>%
+    group_by(year = str_sub(as.factor(date), start = 1, end = 4), 'Site Name') %>%
+    summarize(mean(o3, na.rm = T), median(o3, na.rm =T), max(o3, na.rm = T), min(o3, na.rm = T)) 
+  
+}
+stats(daily.site)
+
+#question 15
+an_daily_mean <- function(x,y){
+  county <- as.character(y)
+  data <- filter(x, str_detect('County Name', county))
+  data %>%
+    group_by(year = str_sub(as.factor(date), start = 1, end = 4)) %>% 
+    summarize(ano3mean = mean(o3, na.rm = T))
+}
+
+an_daily_mean(daily.site, "Merced")
